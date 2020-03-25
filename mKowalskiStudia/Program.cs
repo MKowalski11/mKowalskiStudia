@@ -35,13 +35,13 @@ namespace mKowalskiStudia
                 Console.WriteLine("Nieprawidlowy parametr " + args[4]);
                 return;
             }
-            
-            // v analiza formuły v
-            int tmpDlugosc = args[0].Length;
-            RPN test = new RPN();
-            test.test = 2;
-            Console.Write(test.test.ToString());
 
+            // v analiza formuły v
+            string wynik;
+            if ("" + args[0][0] + args[0][1] + args[0][2] == "abs") Console.WriteLine("true");
+
+            wynik = RPN.Sprawdzenie(args[0]);
+            Console.WriteLine(wynik);
             Console.WriteLine("Hello World!2");
         }
     }
