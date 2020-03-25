@@ -6,10 +6,42 @@ namespace mKowalskiStudia
     {
         static void Main(string[] args)
         {
-            for(int i =0; i < args.Length; i++)
+
+            // v Sprawdzanie zgodności argumentów wejściowych v
+
+            Console.Write("\n");
+            if (args.Length != 5)
             {
-                Console.WriteLine(args[i]);
+                Console.WriteLine("Nieprawidlowa ilosc argumentow.");
+                return;
             }
+            if (double.TryParse(args[1], out double X) != true)
+            {
+                Console.WriteLine("Nieprawidlowy parametr "+args[1]);
+                return;
+            }
+            if (double.TryParse(args[2],out double x_min) != true)
+            {
+                Console.WriteLine("Nieprawidlowy parametr " + args[2]);
+                return;
+            }
+            if (double.TryParse(args[3],out double x_max) != true)
+            {
+                Console.WriteLine("Nieprawidlowy parametr " + args[3]);
+                return;
+            }
+            if (int.TryParse(args[4],out int n) != true)
+            {
+                Console.WriteLine("Nieprawidlowy parametr " + args[4]);
+                return;
+            }
+            
+            // v analiza formuły v
+            int tmpDlugosc = args[0].Length;
+            RPN test = new RPN();
+            test.test = 2;
+            Console.Write(test.test.ToString());
+
             Console.WriteLine("Hello World!2");
         }
     }
