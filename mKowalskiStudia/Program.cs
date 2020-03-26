@@ -35,7 +35,7 @@ namespace mKowalskiStudia
                 Console.WriteLine("Nieprawidlowy parametr " + args[4]);
                 return;
             }
-            RPN wynik = new RPN(args[0], X,x_min,x_max,n);
+            RPN wynik = new RPN(args[0]);
             /*
             //v testy działania metod klasy v
             //if ("" + args[0][0] + args[0][1] + args[0][2] == "abs") Console.WriteLine("true");

@@ -6,16 +6,19 @@ namespace mKowalskiStudia
 {
     public class RPN
     {
-        public RPN(string input, double x, double x_min, double x_max, int n)
+        public RPN(string input)
         {
             string tmpString = inputCheck(input);
-            string Infix_Tokens = InfixTokens(tmpString);
-            Console.WriteLine(Infix_Tokens);
+            string Infix_Tokens_String = InfixTokens(tmpString);
+            string[] Infix_Tokens_Array = new string[InfixTokensCount(Infix_Tokens_String)];
+            Infix_Tokens_Array = SplitInfixTokens(Infix_Tokens_String, InfixTokensCount(Infix_Tokens_String));
+            string RPN_Tokens = InfixToRPN(Infix_Tokens_Array);
+            //Console.WriteLine(Infix_Tokens);
         }
 
         public static string inputCheck(string input)
         {
-            int dlugoscInput=input.Length;
+            int dlugoscInput = input.Length;
             string tekst = "";
             for (int i = 0; i < dlugoscInput; i++)
             {
@@ -39,7 +42,7 @@ namespace mKowalskiStudia
                     if (tekst[i] == '+') continue;
                     else if (tekst[i] == '0' || tekst[i] == '1' || tekst[i] == '2' || tekst[i] == '3' || tekst[i] == '4' || tekst[i] == '5'
                        || tekst[i] == '6' || tekst[i] == '7' || tekst[i] == '8' || tekst[i] == '9' || tekst[i] == 'x') { wynik += tekst[i]; continue; }
-                    else if (tekst[i] == '(') { nawias++;wynik += '('; continue; }
+                    else if (tekst[i] == '(') { nawias++; wynik += '('; continue; }
                     else if (tekst.Length - i >= 6)
                     {
                         if ("" + tekst[i] + tekst[i + 1] + tekst[i + 2] + tekst[i + 3] == "sin(") { wynik += "sin("; i += 3; nawias++; continue; }
@@ -68,49 +71,49 @@ namespace mKowalskiStudia
                 else
                 {
                     if ((tekst[i] == '0' || tekst[i] == '1' || tekst[i] == '2' || tekst[i] == '3' || tekst[i] == '4' || tekst[i] == '5'
-                       || tekst[i] == '6' || tekst[i] == '7' || tekst[i] == '8' || tekst[i] == '9' || tekst[i] == 'x')&&tekst[i-1]=='x') { wynik = "Error. Nieprawidłowy zapis X."; break; }
-                    else if(tekst[i] == 'x' &&( tekst[i-1] == '0' || tekst[i - 1] == '1' || tekst[i - 1] == '2' || tekst[i - 1] == '3' || tekst[i - 1] == '4' ||
-                        tekst[i - 1] == '5' || tekst[i - 1] == '6' || tekst[i - 1] == '7' || tekst[i - 1] == '8' || tekst[i - 1] == '9')){
+                       || tekst[i] == '6' || tekst[i] == '7' || tekst[i] == '8' || tekst[i] == '9' || tekst[i] == 'x') && tekst[i - 1] == 'x') { wynik = "Error. Nieprawidłowy zapis X."; break; }
+                    else if (tekst[i] == 'x' && (tekst[i - 1] == '0' || tekst[i - 1] == '1' || tekst[i - 1] == '2' || tekst[i - 1] == '3' || tekst[i - 1] == '4' ||
+                        tekst[i - 1] == '5' || tekst[i - 1] == '6' || tekst[i - 1] == '7' || tekst[i - 1] == '8' || tekst[i - 1] == '9')) {
                         wynik += "*x";
                         continue;
                     }
                     else if (tekst[i] == '0' || tekst[i] == '1' || tekst[i] == '2' || tekst[i] == '3' || tekst[i] == '4' || tekst[i] == '5'
-                       || tekst[i] == '6' || tekst[i] == '7' || tekst[i] == '8' || tekst[i] == '9' || tekst[i] == 'x') { wynik += tekst[i];continue; }
-                    else if (tekst[i] == '.' || tekst[i]== ',')
+                       || tekst[i] == '6' || tekst[i] == '7' || tekst[i] == '8' || tekst[i] == '9' || tekst[i] == 'x') { wynik += tekst[i]; continue; }
+                    else if (tekst[i] == '.' || tekst[i] == ',')
                     {
-                        if (i == tekst.Length-1) { wynik = "Error. Kropka/przecinek na koncu. Bez sensu.";break; }
+                        if (i == tekst.Length - 1) { wynik = "Error. Kropka/przecinek na koncu. Bez sensu."; break; }
                         else
                         {
                             if ((tekst[i - 1] == '0' || tekst[i - 1] == '1' || tekst[i - 1] == '2' || tekst[i - 1] == '3' || tekst[i - 1] == '4' || tekst[i - 1] == '5'
                        || tekst[i - 1] == '6' || tekst[i - 1] == '7' || tekst[i - 1] == '8' || tekst[i - 1] == '9') && (tekst[i + 1] == '0' || tekst[i + 1] == '1' || tekst[i + 1] == '2' || tekst[i + 1] == '3' || tekst[i + 1] == '4' || tekst[i + 1] == '5'
                        || tekst[i + 1] == '6' || tekst[i + 1] == '7' || tekst[i + 1] == '8' || tekst[i + 1] == '9')) {
                                 if (kropka == false) { wynik += "."; kropka = true; continue; }
-                                else { wynik = "Error. Dwa przecinki/kropki w jednej liczbie. Nie wolno tak.";break; }
+                                else { wynik = "Error. Dwa przecinki/kropki w jednej liczbie. Nie wolno tak."; break; }
                             }
-                            else { wynik = "Error. Przecinek/kropka nie jest w 'srodku' liczby.";break; }
+                            else { wynik = "Error. Przecinek/kropka nie jest w 'srodku' liczby."; break; }
                         }
                     }
                     // v jeśli żadne z powyższych, liczba się skończyła i będzie jakiś znak v
                     kropka = false; // w tej liczbie fizycznie nie wystąpi przecinek po raz drugi
-                    if (tekst[i] == '-' && (tekst[i - 1] == '*' || tekst[i - 1] == '/' || tekst[i - 1] == '(' ))
+                    if (tekst[i] == '-' && (tekst[i - 1] == '*' || tekst[i - 1] == '/' || tekst[i - 1] == '('))
                     {
                         wynik += "(0-1)*";
                         continue;
                     }
-                    else if((tekst[i]=='-' || tekst[i]=='+')&&(tekst[i-1]=='-' || tekst[i - 1] == '+')){
+                    else if ((tekst[i] == '-' || tekst[i] == '+') && (tekst[i - 1] == '-' || tekst[i - 1] == '+')) {
                         wynik = "Error, powtorzenie operanda tego samego stopnia.";
                         break;
                     }
-                    else if ((tekst[i] == '*' || tekst[i] == '/' || tekst[i] == '^') && (tekst[i - 1] == '-' || tekst[i - 1] == '+' || tekst[i-1] == '^'))
+                    else if ((tekst[i] == '*' || tekst[i] == '/' || tekst[i] == '^') && (tekst[i - 1] == '-' || tekst[i - 1] == '+' || tekst[i - 1] == '^'))
                     {
                         wynik = "Error, powtorzenie operanda tego samego stopnia.";
                         break;
                     }
-                    else if(tekst[i] == '+' && (tekst[i - 1] == '*' || tekst[i - 1] == '/' || tekst[i - 1] == '('))
+                    else if (tekst[i] == '+' && (tekst[i - 1] == '*' || tekst[i - 1] == '/' || tekst[i - 1] == '('))
                     {
                         continue;
                     }
-                    else if (tekst[i]=='+' || tekst[i] == '-' || tekst[i] == '*' || tekst[i] == '/' || tekst[i] == '^') { wynik += tekst[i];continue; }
+                    else if (tekst[i] == '+' || tekst[i] == '-' || tekst[i] == '*' || tekst[i] == '/' || tekst[i] == '^') { wynik += tekst[i]; continue; }
                     else if (tekst[i] == '(') { nawias++; wynik += tekst[i]; continue; }
                     else if (tekst[i] == ')') { nawias--; wynik += tekst[i]; continue; }
                     else if (tekst.Length - i >= 6)
@@ -138,7 +141,7 @@ namespace mKowalskiStudia
                     }
                     else
                     {
-                        wynik = "Error. Nieznany symbol."+tekst[i];
+                        wynik = "Error. Nieznany symbol." + tekst[i];
                         break;
                     }
                 }
@@ -153,13 +156,13 @@ namespace mKowalskiStudia
             if (inputText[0] == 'E' && inputText[1] == 'r' && inputText[2] == 'r') return inputText;
             //bool negative = false;
             string result = "";
-            for(int i=0; i < inputText.Length; i++)
+            for (int i = 0; i < inputText.Length; i++)
             {
-                if (inputText[i] == '(' && inputText[i + 1] == '0' && inputText[i + 2] == '-' && inputText[i + 3] == '1' && inputText[i + 4] == ')' && inputText[i + 5] == '*') { result += '-'; i += 5 ; continue; }
+                if (inputText[i] == '(' && inputText[i + 1] == '0' && inputText[i + 2] == '-' && inputText[i + 3] == '1' && inputText[i + 4] == ')' && inputText[i + 5] == '*') { result += '-'; i += 5; continue; }
                 else if (inputText[i] == '(' || inputText[i] == ')' || inputText[i] == '+' || inputText[i] == '-' || inputText[i] == '*' || inputText[i] == '/' || inputText[i] == '^') { result += (" " + inputText[i] + " "); continue; }
                 else if (inputText[i] == '0' || inputText[i] == '1' || inputText[i] == '2' || inputText[i] == '3' || inputText[i] == '4' || inputText[i] == '5' || inputText[i] == '6' || inputText[i] == '7' ||
                     inputText[i] == '8' || inputText[i] == '9' || inputText[i] == 'x' || inputText[i] == '.') { result += inputText[i]; continue; }
-                else if ("" + inputText[i] + inputText[i + 1] + inputText[i + 2] + inputText[i + 3] == "sin(") { result += "sin"; i+=2; continue; }
+                else if ("" + inputText[i] + inputText[i + 1] + inputText[i + 2] + inputText[i + 3] == "sin(") { result += "sin"; i += 2; continue; }
                 else if ("" + inputText[i] + inputText[i + 1] + inputText[i + 2] + inputText[i + 3] == "cos(") { result += "cos"; i += 2; continue; }
                 else if ("" + inputText[i] + inputText[i + 1] + inputText[i + 2] + inputText[i + 3] == "tng(") { result += "cos"; i += 2; continue; }
 
@@ -176,9 +179,9 @@ namespace mKowalskiStudia
                 else if ("" + inputText[i] + inputText[i + 1] + inputText[i + 2] + inputText[i + 3] == "sinh") { result += "sinh"; i += 3; continue; }
                 else if ("" + inputText[i] + inputText[i + 1] + inputText[i + 2] + inputText[i + 3] == "cosh") { result += "cosh"; i += 3; continue; }
                 else if ("" + inputText[i] + inputText[i + 1] + inputText[i + 2] + inputText[i + 3] == "tanh") { result += "tanh"; i += 3; continue; }
-                else { result = "Error. Unknown: " + inputText[i];return result; }
+                else { result = "Error. Unknown: " + inputText[i]; return result; }
             }
-            return result ;
+            return result;
         }
         public static int InfixTokensCount(string input)
         {
@@ -195,10 +198,10 @@ namespace mKowalskiStudia
         }
         public static string[] SplitInfixTokens(string input, int TabCount)
         {
-            
+
             string[] tab = new string[TabCount];
             int tokensInArray = 0;
-            string tmpString="";
+            string tmpString = "";
             for (int i = 0; i < input.Length; i++)
             {
                 if (input[i] == ' ')
@@ -211,6 +214,12 @@ namespace mKowalskiStudia
                 tmpString += input[i];
             }
             return tab;
-        } 
+        }
+        public static string InfixToRPN(string[] input)
+        {
+            string result= "";
+
+            return result;
+        }
     }
 }
