@@ -35,21 +35,26 @@ namespace mKowalskiStudia
                 Console.WriteLine("Nieprawidlowy parametr " + args[4]);
                 return;
             }
-
-            // v analiza formuły v
-            string InfixTokens;
+            RPN wynik = new RPN(args[0], X,x_min,x_max,n);
+            /*
+            //v testy działania metod klasy v
             //if ("" + args[0][0] + args[0][1] + args[0][2] == "abs") Console.WriteLine("true");
 
+            // v analiza formuły, rozwinięcie skrótów, zmiana do (z góry poprawnej, jeśli to możliwe) formy akceptowalnej przez funkcje klasy
+            string InfixTokens;
             InfixTokens = RPN.InfixTokens(args[0]);
             
+            // v jeśli wyrzuci błąd, przerwanie działania programu v
             if (InfixTokens[0] == 'E' && InfixTokens[1] == 'r' && InfixTokens[2] == 'r') { Console.WriteLine(InfixTokens);return; }
+
+            // v wypisanie tokenów Infix v
             Console.WriteLine(InfixTokens);
             string[] InfixTokensTab = new string[RPN.InfixTokensCount(InfixTokens)];
             InfixTokensTab = RPN.SplitInfixTokens(InfixTokens,RPN.InfixTokensCount(InfixTokens));
-            for (int i=0; i < InfixTokensTab.Length; i++)
-            {
-                Console.WriteLine(InfixTokensTab[i]);
-            }
+            //for (int i=0; i < InfixTokensTab.Length; i++) Console.WriteLine(InfixTokensTab[i]); // tokeny pojedynczo, jeden pod drugim, podział na podstawie przerw " "
+
+
+            */
             //Console.WriteLine("Hello World!2");
         }
     }

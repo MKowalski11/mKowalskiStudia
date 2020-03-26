@@ -4,9 +4,16 @@ using System.Text;
 
 namespace mKowalskiStudia
 {
-    public static class RPN
+    public class RPN
     {
-        public static string Sprawdzenie(string input)
+        public RPN(string input, double x, double x_min, double x_max, int n)
+        {
+            string tmpString = inputCheck(input);
+            string Infix_Tokens = InfixTokens(tmpString);
+            Console.WriteLine(Infix_Tokens);
+        }
+
+        public static string inputCheck(string input)
         {
             int dlugoscInput=input.Length;
             string tekst = "";
@@ -142,7 +149,7 @@ namespace mKowalskiStudia
         public static string InfixTokens(string input)
         {
             string inputText;
-            inputText = Sprawdzenie(input);
+            inputText = inputCheck(input);
             if (inputText[0] == 'E' && inputText[1] == 'r' && inputText[2] == 'r') return inputText;
             //bool negative = false;
             string result = "";
