@@ -37,12 +37,20 @@ namespace mKowalskiStudia
             }
 
             // v analiza formuły v
-            string wynik;
-            if ("" + args[0][0] + args[0][1] + args[0][2] == "abs") Console.WriteLine("true");
+            string InfixTokens;
+            //if ("" + args[0][0] + args[0][1] + args[0][2] == "abs") Console.WriteLine("true");
 
-            wynik = RPN.Sprawdzenie(args[0]);
-            Console.WriteLine(wynik);
-            Console.WriteLine("Hello World!2");
+            InfixTokens = RPN.InfixTokens(args[0]);
+            
+            if (InfixTokens[0] == 'E' && InfixTokens[1] == 'r' && InfixTokens[2] == 'r') { Console.WriteLine(InfixTokens);return; }
+            Console.WriteLine(InfixTokens);
+            string[] InfixTokensTab = new string[RPN.InfixTokensCount(InfixTokens)];
+            InfixTokensTab = RPN.SplitInfixTokens(InfixTokens,RPN.InfixTokensCount(InfixTokens));
+            for (int i=0; i < InfixTokensTab.Length; i++)
+            {
+                Console.WriteLine(InfixTokensTab[i]);
+            }
+            //Console.WriteLine("Hello World!2");
         }
     }
 }
