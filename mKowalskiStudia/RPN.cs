@@ -13,10 +13,13 @@ namespace mKowalskiStudia
             string Infix_Tokens_String = InfixTokens(tmpString);
             Console.WriteLine(Infix_Tokens_String);
             string[] Infix_Tokens_Array = new string[InfixTokensCount(Infix_Tokens_String)];
+            //Console.WriteLine("InfixTokensCount = " + InfixTokensCount(Infix_Tokens_String));
             Infix_Tokens_Array = SplitInfixTokens(Infix_Tokens_String, InfixTokensCount(Infix_Tokens_String));
-            //for (int i = 0; i < Infix_Tokens_Array.Length; i++) Console.WriteLine("Token " + i + " : " + Infix_Tokens_Array[i]);
-            string RPN_Tokens = InfixToRPN(Infix_Tokens_Array);
-            
+            //for (int i = 0; i < Infix_Tokens_Array.Length; i++) Console.WriteLine("InfixToken " + i + " : " + Infix_Tokens_Array[i]);
+            string Postfix_Tokens_String = InfixToPostfix(Infix_Tokens_Array);
+            string[] Postfix_Tokens_Array = new string[PostfixTokensCount(Postfix_Tokens_String)];
+            Postfix_Tokens_Array = SplitPostfixTokens(Postfix_Tokens_String, PostfixTokensCount(Postfix_Tokens_String));
+            //for (int i = 0; i < Postfix_Tokens_Array.Length; i++) Console.WriteLine("PostfixToken " + i + " : " + Postfix_Tokens_Array[i]);
         }
 
         public static string inputCheck(string input)
@@ -193,7 +196,9 @@ namespace mKowalskiStudia
             {
                 if (input[i] == ' ')
                 {
-                    if (i == 0 || i == input.Length - 1) continue;
+                    if (i == 0) continue;
+                    if (i == input.Length - 1) continue;
+                    if (input[i + 1] == ' ') continue;
                     TabCount++;
                 }
             }
@@ -206,9 +211,13 @@ namespace mKowalskiStudia
             string tmpString = "";
             for (int i = 0; i < input.Length; i++)
             {
+                if (i == 0 && input[i] == ' ') continue;
+                if (i == input.Length-1 && input[i] == ' ') continue;
                 if (input[i] == ' ')
                 {
+                    if (input[i - 1] == ' ') continue;
                     tab[tokensInArray] = tmpString;
+                    //Console.WriteLine("Token : " + tokensInArray + " : " + tmpString);
                     tokensInArray++;
                     tmpString = "";
                     continue;
@@ -216,10 +225,11 @@ namespace mKowalskiStudia
                 tmpString += input[i];
             }
             tab[tokensInArray] = tmpString;
+            //Console.WriteLine("Token : " + tokensInArray + " : " + tmpString);
             tokensInArray++;
             return tab;
         }
-        public static string InfixToRPN(string[] t)
+        public static string InfixToPostfix(string[] t)
         {
             string result= "";
             Queue Q = new Queue();
@@ -265,6 +275,44 @@ namespace mKowalskiStudia
             }
             Console.WriteLine(result);
             return result;
+        }
+        public static int PostfixTokensCount(string input)
+        {
+            int TabCount = 1;
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input[i] == ' ')
+                {
+                    if (i == 0 || i == input.Length - 1) continue;
+                    
+                    TabCount++;
+                }
+            }
+            return TabCount;
+        }
+        public static string[] SplitPostfixTokens(string input, int TabCount)
+        {
+            string[] tab = new string[TabCount];
+            int tokensInArray = 0;
+            string tmpString = "";
+            for (int i = 0; i < input.Length; i++)
+            {
+                if (input[i] == ' ')
+                {
+                    tab[tokensInArray] = tmpString;
+                    tokensInArray++;
+                    tmpString = "";
+                    continue;
+                }
+                tmpString += input[i];
+            }
+            //tab[tokensInArray] = tmpString;
+            //tokensInArray++;
+            return tab;
+        }
+        public static double PostfixCalcSingleX(string[] input, double X) {
+
+            return 0.0;
         }
     }
 }
