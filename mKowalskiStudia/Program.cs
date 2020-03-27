@@ -14,45 +14,46 @@ namespace mKowalskiStudia
             Console.Write("\n");
             if (args.Length != 5)
             {
-                Console.WriteLine("Nieprawidlowa ilosc argumentow.");
+                Console.WriteLine("Error. Incorrect argument count.");
                 return;
             }
             if (double.TryParse(args[1], out double X) != true)
             {
-                Console.WriteLine("Nieprawidlowy parametr "+args[1]);
+                Console.WriteLine("Error. Incorrect argument " + args[1]);
                 return;
             }
-            if (double.TryParse(args[2],out double x_min) != true)
+            if (double.TryParse(args[2], out double x_min) != true)
             {
-                Console.WriteLine("Nieprawidlowy parametr " + args[2]);
+                Console.WriteLine("Error. Incorrect argument " + args[2]);
                 return;
             }
-            if (double.TryParse(args[3],out double x_max) != true)
+            if (double.TryParse(args[3], out double x_max) != true)
             {
-                Console.WriteLine("Nieprawidlowy parametr " + args[3]);
+                Console.WriteLine("Error. Incorrect argument " + args[3]);
                 return;
             }
-            if (int.TryParse(args[4],out int n) != true)
+            if (int.TryParse(args[4], out int n) != true)
             {
-                Console.WriteLine("Nieprawidlowy parametr " + args[4]);
+                Console.WriteLine("Error. Incorrect argument " + args[4]);
                 return;
             }
-            
-            RPN wynik = new RPN(args[0]);
+            if (x_max < x_min) {Console.WriteLine("Error. X_max is less than X_min"); return; }
+            if (n<=0) { Console.WriteLine("Error. N is less or equal to 0"); }
+                RPN result = new RPN(args[0]);
             //Console.WriteLine(wynik.ErrorLog);
-            if (wynik.ErrorLog[0] == 'E' && wynik.ErrorLog[1] == 'r' && wynik.ErrorLog[2] == 'r') { Console.WriteLine(wynik.ErrorLog); return; }
-            foreach (string token in wynik.Infix_Tokens_Array)
+            if (result.ErrorLog[0] == 'E' && result.ErrorLog[1] == 'r' && result.ErrorLog[2] == 'r') { Console.WriteLine(result.ErrorLog); return; }
+            foreach (string token in result.Infix_Tokens_Array)
             {
                 Console.Write(token+" ");
             }
             Console.Write("\n");
-            foreach (string token in wynik.Postfix_Tokens_Array)
+            foreach (string token in result.Postfix_Tokens_Array)
             {
                 Console.Write(token + " ");
             }
             Console.Write("\n");
-            Console.WriteLine(RPN.PostfixCalcSingleX(wynik.Postfix_Tokens_Array, X));
-            RPN.PostfixCalcMultiX(wynik.Postfix_Tokens_Array, X, x_min, x_max, n);
+            Console.WriteLine(RPN.PostfixCalcSingleX(result.Postfix_Tokens_Array, X));
+            RPN.PostfixCalcMultiX(result.Postfix_Tokens_Array, X, x_min, x_max, n);
             /*
             Stack S = new Stack();
             S.Push("2,0");
