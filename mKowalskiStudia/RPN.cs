@@ -10,8 +10,9 @@ namespace mKowalskiStudia
         public RPN(string input)
         {
             string tmpString = inputCheck(input);
+            if (tmpString[0] == 'E' && tmpString[1] == 'r' && tmpString[2] == 'r') { Console.WriteLine(tmpString); return; }
             string Infix_Tokens_String = InfixTokens(tmpString);
-            Console.WriteLine(Infix_Tokens_String);
+            //Console.WriteLine(Infix_Tokens_String);
             string[] Infix_Tokens_Array = new string[InfixTokensCount(Infix_Tokens_String)];
             //Console.WriteLine("InfixTokensCount = " + InfixTokensCount(Infix_Tokens_String));
             Infix_Tokens_Array = SplitInfixTokens(Infix_Tokens_String, InfixTokensCount(Infix_Tokens_String));
@@ -20,7 +21,7 @@ namespace mKowalskiStudia
             string[] Postfix_Tokens_Array = new string[PostfixTokensCount(Postfix_Tokens_String)];
             Postfix_Tokens_Array = SplitPostfixTokens(Postfix_Tokens_String, PostfixTokensCount(Postfix_Tokens_String));
             //for (int i = 0; i < Postfix_Tokens_Array.Length; i++) Console.WriteLine("PostfixToken " + i + " : " + Postfix_Tokens_Array[i]);
-            Console.WriteLine(PostfixCalcSingleX(Postfix_Tokens_Array, 0.0));
+            //Console.WriteLine(PostfixCalcSingleX(Postfix_Tokens_Array, 0.0));
         }
 
         public static string inputCheck(string input)
@@ -38,7 +39,7 @@ namespace mKowalskiStudia
             bool kropka = false;
             for (int i = 0; i < dlugosc; i++)
             {
-                if (nawias < 0) wynik = "Error, nawiasy.";
+                if (nawias < 0) return "Error, unmatched ( ) symbols.";
                 if (i == 0)
                 {
                     if (tekst[i] == '-')
@@ -73,7 +74,7 @@ namespace mKowalskiStudia
                         }
 
                     }
-                    else wynik = "Error, nieznany symbol na poczatku.";
+                    wynik = "Error, unknown symbol at beggining."; break; 
                 }
                 else
                 {
@@ -88,16 +89,16 @@ namespace mKowalskiStudia
                        || tekst[i] == '6' || tekst[i] == '7' || tekst[i] == '8' || tekst[i] == '9' || tekst[i] == 'x') { wynik += tekst[i]; continue; }
                     else if (tekst[i] == '.' || tekst[i] == ',')
                     {
-                        if (i == tekst.Length - 1) { wynik = "Error. Kropka/przecinek na koncu. Bez sensu."; break; }
+                        if (i == tekst.Length - 1) { wynik = "Error. Dot/comma at end."; break; }
                         else
                         {
                             if ((tekst[i - 1] == '0' || tekst[i - 1] == '1' || tekst[i - 1] == '2' || tekst[i - 1] == '3' || tekst[i - 1] == '4' || tekst[i - 1] == '5'
                        || tekst[i - 1] == '6' || tekst[i - 1] == '7' || tekst[i - 1] == '8' || tekst[i - 1] == '9') && (tekst[i + 1] == '0' || tekst[i + 1] == '1' || tekst[i + 1] == '2' || tekst[i + 1] == '3' || tekst[i + 1] == '4' || tekst[i + 1] == '5'
                        || tekst[i + 1] == '6' || tekst[i + 1] == '7' || tekst[i + 1] == '8' || tekst[i + 1] == '9')) {
                                 if (kropka == false) { wynik += "."; kropka = true; continue; }
-                                else { wynik = "Error. Dwa przecinki/kropki w jednej liczbie. Nie wolno tak."; break; }
+                                else { wynik = "Error. Multiple dots/commas in expected double. "; break; }
                             }
-                            else { wynik = "Error. Przecinek/kropka nie jest w 'srodku' liczby."; break; }
+                            else { wynik = "Error. Dot/comma not inside of number."; break; }
                         }
                     }
                     // v jeśli żadne z powyższych, liczba się skończyła i będzie jakiś znak v
@@ -108,12 +109,12 @@ namespace mKowalskiStudia
                         continue;
                     }
                     else if ((tekst[i] == '-' || tekst[i] == '+') && (tekst[i - 1] == '-' || tekst[i - 1] == '+')) {
-                        wynik = "Error, powtorzenie operanda tego samego stopnia.";
+                        wynik = "Error, repeated operation token.";
                         break;
                     }
                     else if ((tekst[i] == '*' || tekst[i] == '/' || tekst[i] == '^') && (tekst[i - 1] == '-' || tekst[i - 1] == '+' || tekst[i - 1] == '^'))
                     {
-                        wynik = "Error, powtorzenie operanda tego samego stopnia.";
+                        wynik = "Error, repeated operation token.";
                         break;
                     }
                     else if (tekst[i] == '+' && (tekst[i - 1] == '*' || tekst[i - 1] == '/' || tekst[i - 1] == '('))
@@ -143,12 +144,20 @@ namespace mKowalskiStudia
                             else if ("" + tekst[i] + tekst[i + 1] + tekst[i + 2] + tekst[i + 3] + tekst[i + 4] == "asin(") { wynik += "asin("; nawias++; i += 4; continue; }
                             else if ("" + tekst[i] + tekst[i + 1] + tekst[i + 2] + tekst[i + 3] + tekst[i + 4] == "acos(") { wynik += "acos("; nawias++; i += 4; continue; }
                             else if ("" + tekst[i] + tekst[i + 1] + tekst[i + 2] + tekst[i + 3] + tekst[i + 4] == "atan(") { wynik += "atan("; nawias++; i += 4; continue; }
+                            else
+                            {
+                                wynik = "Error. Unknown symbol: " + tekst[i];
+                                break;
+                            }
                         }
-
+                        else {
+                            wynik = "Error. Unknown symbol: " + tekst[i];
+                            break;
+                        }
                     }
                     else
                     {
-                        wynik = "Error. Nieznany symbol." + tekst[i];
+                        wynik = "Error. Unknown symbol." + tekst[i];
                         break;
                     }
                 }
@@ -274,7 +283,7 @@ namespace mKowalskiStudia
             {
                 result += token + " ";
             }
-            Console.WriteLine(result);
+            //Console.WriteLine(result);
             return result;
         }
         public static int PostfixTokensCount(string input)
@@ -335,22 +344,22 @@ namespace mKowalskiStudia
                 else if (t == "-exp") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push((-1) * Math.Exp(tmpDoub)); }
                 else if (t == "log") {
                     tmpDoub = double.Parse(S.Pop().ToString());
-                    if (tmpDoub <= 0) return "Error. Log(X) -> X<=0";
+                    if (tmpDoub <= 0) return "Error. X cannot be less or equal 0";
                     S.Push(Math.Log(tmpDoub));
                 }
                 else if (t == "-log") {
                     tmpDoub = double.Parse(S.Pop().ToString());
-                    if (tmpDoub <= 0) return "Error. Log(X) -> X<=0";
+                    if (tmpDoub <= 0) return "Error. X cannot be less or equal 0";
                     S.Push((-1) * Math.Log(tmpDoub));
                 }
                 else if (t == "sqrt") {
                     tmpDoub = double.Parse(S.Pop().ToString());
-                    if (tmpDoub < 0) return "Error. sqrt(X) -> X<0";
+                    if (tmpDoub < 0) return "Error. X cannot be less than 0";
                     S.Push(Math.Abs(tmpDoub));
                 }
                 else if (t == "-sqrt") {
                     tmpDoub = double.Parse(S.Pop().ToString());
-                    if (tmpDoub < 0) return "Error. sqrt(X) -> X<0";
+                    if (tmpDoub < 0) return "Error. X cannot be less than 0";
                     S.Push((-1) * Math.Abs(tmpDoub));
                 }
 
@@ -363,22 +372,22 @@ namespace mKowalskiStudia
 
                 else if (t == "asin") {
                     tmpDoub = double.Parse(S.Pop().ToString());
-                    if (tmpDoub < -1.0 || tmpDoub > 1.0) return "Error. X cannot be  < (-1) or > 1.";
+                    if (tmpDoub < -1.0 || tmpDoub > 1.0) return "Error. X cannot be  less than (-1) or greater than 1.";
                     S.Push(Math.Asin(tmpDoub));
                 }
                 else if (t == "-asin") {
                     tmpDoub = double.Parse(S.Pop().ToString());
-                    if (tmpDoub < -1.0 || tmpDoub > 1.0) return "Error. X cannot be  < (-1) or > 1.";
+                    if (tmpDoub < -1.0 || tmpDoub > 1.0) return "Error. X cannot be  less than (-1) or greater than 1.";
                     S.Push((-1) * Math.Asin(tmpDoub));
                 }
                 else if (t == "acos") {
                     tmpDoub = double.Parse(S.Pop().ToString());
-                    if (tmpDoub < -1.0 || tmpDoub > 1.0) return "Error. X cannot be  < (-1) or > 1.";
+                    if (tmpDoub < -1.0 || tmpDoub > 1.0) return "Error. X cannot be  less than (-1) or greater than 1.";
                     S.Push(Math.Acos(tmpDoub));
                 }
                 else if (t == "-acos") {
                     tmpDoub = double.Parse(S.Pop().ToString());
-                    if (tmpDoub < -1.0 || tmpDoub > 1.0) return "Error. X cannot be  < (-1) or > 1.";
+                    if (tmpDoub < -1.0 || tmpDoub > 1.0) return "Error. X cannot be  less than (-1) or greater than 1.";
                     S.Push((-1) * Math.Acos(tmpDoub));
                 }
                 else if (t == "atan") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push(Math.Atan(tmpDoub)); }
