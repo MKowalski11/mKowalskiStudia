@@ -20,6 +20,7 @@ namespace mKowalskiStudia
             string[] Postfix_Tokens_Array = new string[PostfixTokensCount(Postfix_Tokens_String)];
             Postfix_Tokens_Array = SplitPostfixTokens(Postfix_Tokens_String, PostfixTokensCount(Postfix_Tokens_String));
             //for (int i = 0; i < Postfix_Tokens_Array.Length; i++) Console.WriteLine("PostfixToken " + i + " : " + Postfix_Tokens_Array[i]);
+            Console.WriteLine(PostfixCalcSingleX(Postfix_Tokens_Array, 0.0));
         }
 
         public static string inputCheck(string input)
@@ -310,9 +311,125 @@ namespace mKowalskiStudia
             //tokensInArray++;
             return tab;
         }
-        public static double PostfixCalcSingleX(string[] input, double X) {
+        public static string PostfixCalcSingleX(string[] input, double X) {
+            Stack S = new Stack();
+            double tmpDoub;
+            double tmpA;
+            double tmpB;
+            //double result;
+            foreach (string t in input)
+            {
+                if (double.TryParse(t, out double doubleT) == true)
+                {
+                    S.Push(doubleT);
+                    continue;
+                }
+                if(t == "x")
+                {
+                    S.Push(X);
+                }
 
-            return 0.0;
+                if (t == "abs") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push(Math.Abs(tmpDoub)); }
+                else if (t == "-abs") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push((-1)*Math.Abs(tmpDoub)); }
+                else if(t == "exp") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push(Math.Exp(tmpDoub)); }
+                else if (t == "-exp") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push((-1) * Math.Exp(tmpDoub)); }
+                else if (t == "log") {
+                    tmpDoub = double.Parse(S.Pop().ToString());
+                    if (tmpDoub <= 0) return "Error. Log(X) -> X<=0";
+                    S.Push(Math.Log(tmpDoub));
+                }
+                else if (t == "-log") {
+                    tmpDoub = double.Parse(S.Pop().ToString());
+                    if (tmpDoub <= 0) return "Error. Log(X) -> X<=0";
+                    S.Push((-1) * Math.Log(tmpDoub));
+                }
+                else if (t == "sqrt") {
+                    tmpDoub = double.Parse(S.Pop().ToString());
+                    if (tmpDoub < 0) return "Error. sqrt(X) -> X<0";
+                    S.Push(Math.Abs(tmpDoub));
+                }
+                else if (t == "-sqrt") {
+                    tmpDoub = double.Parse(S.Pop().ToString());
+                    if (tmpDoub < 0) return "Error. sqrt(X) -> X<0";
+                    S.Push((-1) * Math.Abs(tmpDoub));
+                }
+
+                else if (t == "tan") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push(Math.Tan(tmpDoub)); } //wartości PI/2 +kPI są poza dziedziną tangensa. Niemożliwe jest jednak precyzyjne
+                else if (t == "-tan") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push((-1) * Math.Tan(tmpDoub)); } // podanie takich wartości dla programu ze względu na naturę liczby PI
+                else if (t == "sin") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push(Math.Sin(tmpDoub)); }
+                else if (t == "-sin") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push((-1) * Math.Sin(tmpDoub)); }
+                else if (t == "cos") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push(Math.Cos(tmpDoub)); }
+                else if (t == "-cos") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push((-1) * Math.Cos(tmpDoub)); }
+
+                else if (t == "asin") {
+                    tmpDoub = double.Parse(S.Pop().ToString());
+                    if (tmpDoub < -1.0 || tmpDoub > 1.0) return "Error. X cannot be  < (-1) or > 1.";
+                    S.Push(Math.Asin(tmpDoub));
+                }
+                else if (t == "-asin") {
+                    tmpDoub = double.Parse(S.Pop().ToString());
+                    if (tmpDoub < -1.0 || tmpDoub > 1.0) return "Error. X cannot be  < (-1) or > 1.";
+                    S.Push((-1) * Math.Asin(tmpDoub));
+                }
+                else if (t == "acos") {
+                    tmpDoub = double.Parse(S.Pop().ToString());
+                    if (tmpDoub < -1.0 || tmpDoub > 1.0) return "Error. X cannot be  < (-1) or > 1.";
+                    S.Push(Math.Acos(tmpDoub));
+                }
+                else if (t == "-acos") {
+                    tmpDoub = double.Parse(S.Pop().ToString());
+                    if (tmpDoub < -1.0 || tmpDoub > 1.0) return "Error. X cannot be  < (-1) or > 1.";
+                    S.Push((-1) * Math.Acos(tmpDoub));
+                }
+                else if (t == "atan") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push(Math.Atan(tmpDoub)); }
+                else if (t == "-atan") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push((-1) * Math.Atan(tmpDoub)); }
+
+                else if (t == "sinh") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push(Math.Sinh(tmpDoub)); }
+                else if (t == "-sinh") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push((-1) * Math.Sinh(tmpDoub)); }
+                else if (t == "cosh") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push(Math.Cosh(tmpDoub)); }
+                else if (t == "-cosh") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push((-1) * Math.Cosh(tmpDoub)); }
+                else if (t == "tanh") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push(Math.Tanh(tmpDoub)); }
+                else if (t == "-tanh") { tmpDoub = double.Parse(S.Pop().ToString()); S.Push((-1) * Math.Tanh(tmpDoub)); }
+
+                else if (t == "+")
+                {
+                    tmpA = double.Parse(S.Pop().ToString());
+                    tmpB = double.Parse(S.Pop().ToString());
+                    tmpA = tmpA + tmpB;
+                    S.Push(tmpA);
+                }
+                else if (t == "-")
+                {
+                    tmpA = double.Parse(S.Pop().ToString());
+                    tmpB = double.Parse(S.Pop().ToString());
+                    tmpA = tmpB - tmpA;
+                    S.Push(tmpA);
+                }
+                else if (t == "*")
+                {
+                    tmpA = double.Parse(S.Pop().ToString());
+                    tmpB = double.Parse(S.Pop().ToString());
+                    tmpA = tmpA * tmpB;
+                    S.Push(tmpA);
+                }
+                else if (t == "/")
+                {
+                    tmpA = double.Parse(S.Pop().ToString());
+                    tmpB = double.Parse(S.Pop().ToString());
+                    if (tmpA == '0') return "Error. Division by 0.";
+                    tmpA = tmpB / tmpA;
+                    S.Push(tmpA);
+                }
+                else if (t == "^")
+                {
+                    tmpA = double.Parse(S.Pop().ToString());
+                    tmpB = double.Parse(S.Pop().ToString());
+                    tmpA = Math.Pow(tmpB, tmpA);
+                    S.Push(tmpA);
+                }
+            }
+
+            return S.Pop().ToString();
         }
     }
 }
