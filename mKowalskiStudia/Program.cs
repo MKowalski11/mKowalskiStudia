@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace mKowalskiStudia
 {
@@ -35,7 +37,28 @@ namespace mKowalskiStudia
                 Console.WriteLine("Nieprawidlowy parametr " + args[4]);
                 return;
             }
+            
             RPN wynik = new RPN(args[0]);
+            //Console.WriteLine(wynik.ErrorLog);
+            if (wynik.ErrorLog[0] == 'E' && wynik.ErrorLog[1] == 'r' && wynik.ErrorLog[2] == 'r') { Console.WriteLine(wynik.ErrorLog); return; }
+            foreach (string token in wynik.Infix_Tokens_Array)
+            {
+                Console.Write(token+" ");
+            }
+            Console.Write("\n");
+            foreach (string token in wynik.Postfix_Tokens_Array)
+            {
+                Console.Write(token + " ");
+            }
+            Console.Write("\n");
+            Console.WriteLine(RPN.PostfixCalcSingleX(wynik.Postfix_Tokens_Array, X));
+            RPN.PostfixCalcMultiX(wynik.Postfix_Tokens_Array, X, x_min, x_max, n);
+            /*
+            Stack S = new Stack();
+            S.Push("2,0");
+            Console.WriteLine(double.Parse(S.Peek().ToString()));
+            */
+
             /*
             //v testy działania metod klasy v
             //if ("" + args[0][0] + args[0][1] + args[0][2] == "abs") Console.WriteLine("true");
