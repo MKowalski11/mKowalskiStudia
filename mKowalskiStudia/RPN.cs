@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,10 +11,12 @@ namespace mKowalskiStudia
         {
             string tmpString = inputCheck(input);
             string Infix_Tokens_String = InfixTokens(tmpString);
+            Console.WriteLine(Infix_Tokens_String);
             string[] Infix_Tokens_Array = new string[InfixTokensCount(Infix_Tokens_String)];
             Infix_Tokens_Array = SplitInfixTokens(Infix_Tokens_String, InfixTokensCount(Infix_Tokens_String));
+            //for (int i = 0; i < Infix_Tokens_Array.Length; i++) Console.WriteLine("Token " + i + " : " + Infix_Tokens_Array[i]);
             string RPN_Tokens = InfixToRPN(Infix_Tokens_Array);
-            //Console.WriteLine(Infix_Tokens);
+            
         }
 
         public static string inputCheck(string input)
@@ -198,7 +201,6 @@ namespace mKowalskiStudia
         }
         public static string[] SplitInfixTokens(string input, int TabCount)
         {
-
             string[] tab = new string[TabCount];
             int tokensInArray = 0;
             string tmpString = "";
@@ -213,12 +215,55 @@ namespace mKowalskiStudia
                 }
                 tmpString += input[i];
             }
+            tab[tokensInArray] = tmpString;
+            tokensInArray++;
             return tab;
         }
-        public static string InfixToRPN(string[] input)
+        public static string InfixToRPN(string[] t)
         {
             string result= "";
-
+            Queue Q = new Queue();
+            Stack S = new Stack();
+            Dictionary<string, int> D = new Dictionary<string, int>
+            {
+                {"abs",4 },{"log",4 },{"exp",4 },{"-abs",4 },{"-log",4 },{"-exp",4 },
+                {"sin",4 },{"cos",4 },{"tan",4 },{"-sin",4 },{"-cos",4 },{"-tan",4 },
+                {"asin",4 },{"acos",4 },{"atan",4 },{"-asin",4 },{"-acos",4 },{"-atan",4 },
+                {"sinh",4 },{"cosh",4 },{"tanh",4 },{"-sinh",4 },{"-cosh",4 },{"-tanh",4 },
+                {"sqrt",4 },{"-sqrt",4},{"^",3},{"*",2},{"/",2},{"+",1},{"-",1 },{"(",0}
+            };
+            for(int i = 0; i < t.Length; i++)
+            {
+                //Console.Write("Test dla: "+t[i]+": ");
+                if (t[i] == "(") S.Push(t[i]);
+                else if (t[i] == ")")
+                {
+                    while (S.Peek().ToString() != "(")
+                    {
+                        Q.Enqueue(S.Pop());
+                    }
+                    S.Pop();
+                }
+                else if (D.ContainsKey(t[i]))
+                {
+                    while (S.Count>0 && D[t[i]]<=D[S.Peek().ToString()])
+                    {
+                        Q.Enqueue(S.Pop());
+                    }
+                    S.Push(t[i]);
+                }
+                else Q.Enqueue(t[i]);
+                //Console.Write(t[i] + "\n");
+            }
+            while (S.Count > 0)
+            {
+                Q.Enqueue(S.Pop());
+            }
+            foreach (string token in Q)
+            {
+                result += token + " ";
+            }
+            Console.WriteLine(result);
             return result;
         }
     }
